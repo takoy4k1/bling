@@ -30,7 +30,8 @@ interface AppContextType {
   updateCharacter: (customization: Partial<CharacterCustomization>) => void;
   addJournalEntry: (entry: Omit<JournalEntry, 'id'>) => void;
   cheerFriend: (friendId: string) => void;
-  addFriend: (handle: string, name: string) => boolean;
+  addFriend: (handle: string, name: string, customAvatar?: Partial<CharacterCustomization>, sharedGoal?: string) => boolean;
+  deleteFriend: (friendId: string) => void;
   updateProfile: (updates: { username?: string; email?: string; characterName?: string; title?: string }) => void;
   toggleTheme: () => void;
   toggleSound: () => void;
@@ -39,7 +40,7 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-const LOCAL_STORAGE_KEY = 'glowquest_state_v1';
+const LOCAL_STORAGE_KEY = 'glowquest_clean_v2';
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Load initial from localStorage or defaults
@@ -303,40 +304,49 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     triggerConfetti(30);
   };
 
-  const addFriend = (handle: string, name: string): boolean => {
+  const addFriend = (
+    handle: string, 
+    name: string, 
+    customAvatar?: Partial<CharacterCustomization>,
+    sharedGoal?: string
+  ): boolean => {
     const formattedHandle = handle.startsWith('@') ? handle : `@${handle}`;
     const newFriend: Friend = {
       id: `f-${Date.now()}`,
-      name: name.trim() || 'Starlight Bestie',
+      name: name.trim() || 'My Bestie',
       handle: formattedHandle,
       level: 1,
-      xp: 50,
+      xp: 0,
       streak: 1,
-      sharedGoalTitle: 'Starting the GLOWQUEST Journey ✨',
-      sharedGoalProgress: 10,
-      recentAchievement: 'First Quest 🌱',
+      sharedGoalTitle: sharedGoal || 'Growing together on GLOWQUEST ✨',
+      sharedGoalProgress: 0,
+      recentAchievement: 'Joined the Garden 🌱',
       online: true,
-      cheersCount: 1,
+      cheersCount: 0,
       lastActive: 'Just now',
       avatar: {
         name: name.trim() || 'Bestie',
-        title: 'New Adventurer',
-        vibe: 'coquette',
-        skinTone: '#fed7aa',
-        hairStyle: 'bob',
-        hairColor: '#3b82f6',
-        eyeStyle: 'sparkle',
-        eyeColor: '#10b981',
-        outfit: 'ribbon-cardigan',
-        accessory: 'star-clips',
-        background: 'cherry-cloud',
-        pet: 'bunny',
-        expression: 'happy',
+        title: 'Glow Friend ✨',
+        vibe: customAvatar?.vibe || 'coquette',
+        skinTone: customAvatar?.skinTone || '#fed7aa',
+        hairStyle: customAvatar?.hairStyle || 'bob',
+        hairColor: customAvatar?.hairColor || '#4a2810',
+        eyeStyle: customAvatar?.eyeStyle || 'sparkle',
+        eyeColor: customAvatar?.eyeColor || '#3b82f6',
+        outfit: customAvatar?.outfit || 'ribbon-cardigan',
+        accessory: customAvatar?.accessory || 'ribbon-bow',
+        background: customAvatar?.background || 'cherry-cloud',
+        pet: customAvatar?.pet || 'bunny',
+        expression: customAvatar?.expression || 'happy',
       },
     };
     setFriends(prev => [newFriend, ...prev]);
     awardXpAndCoins(20, 15);
     return true;
+  };
+
+  const deleteFriend = (friendId: string) => {
+    setFriends(prev => prev.filter(f => f.id !== friendId));
   };
 
   const updateProfile = (updates: { username?: string; email?: string; characterName?: string; title?: string }) => {
@@ -407,6 +417,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addJournalEntry,
         cheerFriend,
         addFriend,
+        deleteFriend,
         updateProfile,
         toggleTheme,
         toggleSound,
