@@ -31,6 +31,7 @@ interface AppContextType {
   addJournalEntry: (entry: Omit<JournalEntry, 'id'>) => void;
   cheerFriend: (friendId: string) => void;
   addFriend: (handle: string, name: string) => boolean;
+  updateProfile: (updates: { username?: string; email?: string; characterName?: string; title?: string }) => void;
   toggleTheme: () => void;
   toggleSound: () => void;
   resetAllData: () => void;
@@ -338,6 +339,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return true;
   };
 
+  const updateProfile = (updates: { username?: string; email?: string; characterName?: string; title?: string }) => {
+    setProfile(prev => ({
+      ...prev,
+      username: updates.username !== undefined ? updates.username : prev.username,
+      email: updates.email !== undefined ? updates.email : prev.email,
+      character: {
+        ...prev.character,
+        name: updates.characterName !== undefined ? updates.characterName : prev.character.name,
+        title: updates.title !== undefined ? updates.title : prev.character.title,
+      },
+    }));
+    if (profile.soundEnabled) sound.playPop();
+  };
+
   const toggleTheme = () => {
     setProfile(prev => ({
       ...prev,
@@ -392,6 +407,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addJournalEntry,
         cheerFriend,
         addFriend,
+        updateProfile,
         toggleTheme,
         toggleSound,
         resetAllData,

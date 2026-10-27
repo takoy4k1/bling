@@ -18,11 +18,28 @@ import {
 export const SettingsPage: React.FC = () => {
   const { 
     profile, 
+    updateProfile,
     toggleTheme, 
     toggleSound, 
     resetAllData, 
     setActivePage 
   } = useApp();
+
+  const [username, setUsername] = React.useState(profile.username);
+  const [characterName, setCharacterName] = React.useState(profile.character.name);
+  const [characterTitle, setCharacterTitle] = React.useState(profile.character.title);
+  const [savedSuccess, setSavedSuccess] = React.useState(false);
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateProfile({
+      username: username.trim() || 'AriaGlow',
+      characterName: characterName.trim() || 'Aria',
+      title: characterTitle.trim() || 'Glow Novice ✨',
+    });
+    setSavedSuccess(true);
+    setTimeout(() => setSavedSuccess(false), 2500);
+  };
 
   return (
     <div className="space-y-8 pb-16 max-w-4xl mx-auto">
@@ -34,7 +51,7 @@ export const SettingsPage: React.FC = () => {
           <SettingsIcon className="w-6 h-6 text-zinc-500" />
         </h1>
         <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 mt-1">
-          Control audio effects, privacy defaults, visual theme, and demo account data.
+          Customize your display name, friend connections, audio, and visual theme.
         </p>
       </div>
 
@@ -42,28 +59,68 @@ export const SettingsPage: React.FC = () => {
         
         {/* Profile & Account Details */}
         <div className="glow-card rounded-3xl p-6 space-y-4">
-          <h2 className="font-heading text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
-            <User className="w-4 h-4 text-rose-500" />
-            <span>Profile Identity</span>
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-            <div className="p-3.5 rounded-2xl bg-pink-50/50 dark:bg-zinc-800/50 border border-pink-100 dark:border-zinc-700">
-              <span className="text-zinc-400 font-bold uppercase text-[10px]">Username</span>
-              <p className="font-semibold text-zinc-800 dark:text-zinc-100 mt-0.5 text-sm">{profile.username}</p>
-            </div>
-            <div className="p-3.5 rounded-2xl bg-pink-50/50 dark:bg-zinc-800/50 border border-pink-100 dark:border-zinc-700">
-              <span className="text-zinc-400 font-bold uppercase text-[10px]">Email</span>
-              <p className="font-semibold text-zinc-800 dark:text-zinc-100 mt-0.5 text-sm">{profile.email}</p>
-            </div>
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading text-base font-bold text-zinc-900 dark:text-white flex items-center gap-2">
+              <User className="w-4 h-4 text-rose-500" />
+              <span>Your Identity & Display Name</span>
+            </h2>
+            {savedSuccess && (
+              <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/60 px-3 py-1 rounded-full animate-bounce">
+                Saved! ✨
+              </span>
+            )}
           </div>
 
-          <button
-            onClick={() => setActivePage('wardrobe')}
-            className="text-xs font-bold text-rose-500 hover:underline cursor-pointer"
-          >
-            Edit Character Avatar & Wardrobe →
-          </button>
+          <form onSubmit={handleSaveProfile} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+              <div>
+                <label className="block text-zinc-600 dark:text-zinc-300 font-bold mb-1">Account Username</label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="e.g. takoy4k1"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-pink-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-400"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-600 dark:text-zinc-300 font-bold mb-1">Character Name</label>
+                <input
+                  type="text"
+                  value={characterName}
+                  onChange={(e) => setCharacterName(e.target.value)}
+                  placeholder="e.g. Maya, Alex, Leo"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-pink-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-400"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-600 dark:text-zinc-300 font-bold mb-1">Hero Title</label>
+                <input
+                  type="text"
+                  value={characterTitle}
+                  onChange={(e) => setCharacterTitle(e.target.value)}
+                  placeholder="e.g. Stargazer ✨"
+                  className="w-full px-3 py-2 text-sm rounded-xl border border-pink-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-400"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <button
+                type="button"
+                onClick={() => setActivePage('wardrobe')}
+                className="text-xs font-bold text-rose-500 hover:underline cursor-pointer"
+              >
+                Open Wardrobe & Styling →
+              </button>
+              <button
+                type="submit"
+                className="btn-glow px-5 py-2 text-xs font-bold cursor-pointer"
+              >
+                Save My Name
+              </button>
+            </div>
+          </form>
         </div>
 
         {/* Audio & Visual Options */}
