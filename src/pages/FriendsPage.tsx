@@ -16,12 +16,19 @@ import {
 } from 'lucide-react';
 
 export const FriendsPage: React.FC = () => {
-  const { friends, cheerFriend, addFriend, deleteFriend } = useApp();
+  const { friends, quests, cheerFriend, addFriend, deleteFriend } = useApp();
 
   const [newHandle, setNewHandle] = useState('');
   const [newName, setNewName] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Group challenge starts from 0 and increments with you and your friends' completed quests
+  const userCompletedQuests = quests.filter(q => q.completed).length;
+  const friendsCompletedQuests = friends.reduce((acc, f) => acc + (f.sharedGoalProgress ? Math.floor(f.sharedGoalProgress / 20) : 0), 0);
+  const totalGroupProgress = userCompletedQuests + friendsCompletedQuests;
+  const targetGroupGoal = 50;
+  const groupProgressPercent = Math.min(100, Math.round((totalGroupProgress / targetGroupGoal) * 100));
 
   const handleAddFriendSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,9 +96,14 @@ export const FriendsPage: React.FC = () => {
           </div>
 
           <div className="shrink-0 text-right">
-            <span className="text-xs font-bold text-rose-500">76 / 100 Quests Done</span>
+            <span className="text-xs font-bold text-rose-500">
+              {totalGroupProgress} / {targetGroupGoal} Quests Done ({groupProgressPercent}%)
+            </span>
             <div className="w-44 h-2.5 bg-pink-200 dark:bg-zinc-700 rounded-full overflow-hidden mt-1.5">
-              <div className="h-full bg-gradient-to-r from-pink-400 to-purple-500 rounded-full" style={{ width: '76%' }} />
+              <div 
+                className="h-full bg-gradient-to-r from-pink-400 to-purple-500 rounded-full transition-all duration-500" 
+                style={{ width: `${groupProgressPercent}%` }} 
+              />
             </div>
           </div>
         </div>
