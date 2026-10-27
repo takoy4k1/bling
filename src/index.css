@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Fredoka', 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-serif: 'Playfair Display', serif;
+
+    --bg-dreamy: #fff5f7;
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --border-card: rgba(253, 164, 175, 0.35);
+    --primary-pink: #f43f5e;
+    --accent-lavender: #c084fc;
+    --accent-butter: #fef08a;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    background-color: var(--bg-dreamy);
+    color: #1e293b;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Dreamy background floating sparkles animation */
+.bg-dreamy-gradient {
+  background: radial-gradient(circle at 10% 20%, rgba(255, 228, 230, 0.9) 0%, rgba(253, 242, 248, 0.8) 50%, rgba(245, 243, 255, 0.9) 100%);
+}
+
+.dark .bg-dreamy-gradient {
+  background: radial-gradient(circle at 10% 20%, #1e112a 0%, #110d1f 50%, #0d0a14 100%);
+}
+
+/* Glassmorphism Card Style */
+.glow-card {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1.5px solid rgba(254, 205, 211, 0.55);
+  box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.08), 0 8px 10px -6px rgba(244, 114, 182, 0.05);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glow-card:hover {
+  border-color: rgba(244, 114, 182, 0.85);
+  box-shadow: 0 14px 30px -5px rgba(244, 114, 182, 0.16), 0 10px 12px -5px rgba(244, 114, 182, 0.1);
+}
+
+.dark .glow-card {
+  background: rgba(24, 18, 38, 0.75);
+  border-color: rgba(168, 85, 247, 0.25);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.dark .glow-card:hover {
+  border-color: rgba(236, 72, 153, 0.5);
+  box-shadow: 0 14px 30px -5px rgba(236, 72, 153, 0.15);
+}
+
+/* Soft cute buttons */
+.btn-glow {
+  background: linear-gradient(135deg, #fb7185 0%, #f43f5e 50%, #e11d48 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px 0 rgba(244, 63, 94, 0.38);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-glow:hover {
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 6px 20px 0 rgba(244, 63, 94, 0.5);
+}
+
+.btn-glow:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-lavender {
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 100%);
+  color: white;
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 4px 14px 0 rgba(168, 85, 247, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-lavender:hover {
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 6px 20px 0 rgba(168, 85, 247, 0.48);
+}
+
+.btn-lavender:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #475569;
+  border: 1.5px solid rgba(254, 205, 211, 0.7);
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: #fff1f2;
+  color: #e11d48;
+  border-color: #fda4af;
+  transform: translateY(-1px);
+}
+
+.dark .btn-secondary {
+  background: rgba(39, 30, 58, 0.8);
+  color: #e2e8f0;
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.dark .btn-secondary:hover {
+  background: rgba(59, 44, 88, 0.9);
+  color: #f472b6;
+  border-color: rgba(244, 114, 182, 0.5);
+}
+
+/* Animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(1deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.015); }
+}
+
+@keyframes sparkleSpin {
+  0% { transform: scale(0.8) rotate(0deg); opacity: 0.6; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0.8) rotate(360deg); opacity: 0.6; }
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-sparkle {
+  animation: sparkleSpin 3s linear infinite;
+}
+
+/* Custom scrollbars for cozy feel */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(254, 226, 226, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fda4af;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #fb7185;
+}
